@@ -1,0 +1,96 @@
+
+-------------
+Mini Tutorial
+-------------
+
+Refer to files in the folder "Tutorial".
+Input: Extant graph in file nx_run=1_qmod=0.9_qcon=0.3_n=8 present within folder illus3_n8 in current directory. It is also copied to illus3_n8/extant.
+
+1. Run ReverseDMC:
+$ python run_greedy.py illus3_n8/greedy_nx_run=1_qmod=0.9_qcon=0.3_n=8 0.3 0.9 illus3_n8/greedy_nx_run=1_qmod=0.9_qcon=0.3_n=8
+
+Usage: python run_greedy.py <input filename> <qcon> <qmod> <output filename>
+This runs archaeology.py and creates an output file that ILP can consume.
+
+2. Run ILP: (see detailed help below)
+$ python ILP.py -e illus3_n8/greedy_nx_run=1_qmod=0.9_qcon=0.3_n=8 -g illus3_n8/greedy_nx_run=1_qmod=0.9_qcon=0.3_n=8 -o illus3_n8/ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8 -c 0.3 -m 0.9
+
+This creates 30 solutions with filenames in the folder illus3_n8:
+ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8_solution0.txt ... ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8_solution29.txt 
+
+3. Create list of anchor and removed nodes from ILP solutions
+$ python ILP2ARlist.py
+
+This runs the script get_anchor_list2.py on all the 30 ILP solutions to create 30 files in the folder illus3_n8:
+ARlist_ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8_solution0.txt ... ARlist_ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8_solution29.txt
+
+4. Create reconstructed evolutionary path
+$ python get_graphs.py
+
+This runs the script ARlist2GraphList.py on all the 30 ILP solutions (from the ARlist files) to create all previous networks for each solution. For example, the 25th solution: ARlist_ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8_solution24.txt has graphs:
+ARlist_ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8_solution24.txt_recon_G3 ... ARlist_ILP_nx_run=1_qmod=0.9_qcon=0.3_n=8_solution24.txt_recon_G7
+
+You can run ARlist2GraphList.py directly on illus3_n8/greedy_nx_run=1_qmod=0.9_qcon=0.3_n=8 to get the graphs from ReverseDMC:
+$ python ARlist2GraphList.py 8 illus3_n8/greedy_nx_run=1_qmod=0.9_qcon=0.3_n=8 illus3_n8/extant
+
+At this point you have all the inferred paths and anchor/removed nodes from both ReverseDMC and ILP.
+
+Additional utilities:
+
+1. get_lkl.py computes likelihood values for all the solutions
+2. draw_simple_graph.py draws a network and saves in a png file
+3. draw_graph.py draws a network and colours the anchor and removed nodes. draw_all_graphs uses draw_graph.py to create graph drawings for each graph in the reconstructed history.
+4. If true evolutionary history is know compute_grakel_dist.py and get_ktau.py can be used to compute kernel similarity and kendall's tau values for each reconstructed history
+---------------------------------
+
+------
+ILP.py
+------
+
+Program arguments:
+usage: ILP.py [-h] -e EXTANT -g GREEDY -o OUTPUT [-c Q_CON] [-m Q_MOD]
+              [-t TIMELIMIT] [-n NUMCORES] [-s NUMSOLUTIONS] [-p POOLMODE]
+              [-f FOCUS] [-r HEURISTICS]
+
+ILP to reconstruct maximum likelihood network evolution history using
+Duplication Mutation with Complementarity (DMC) model. Uses Gurobi solver, see
+http://www.gurobi.com/documentation/8.0/refman/index.html
+
+Required arguments:
+  -e EXTANT, --extant EXTANT
+                        Extant filename. Format: one edge per line
+  -g GREEDY, --greedy GREEDY
+                        Filename of Solution from Greedy Approach ReverseDMC
+  -o OUTPUT, --output OUTPUT
+                        Output Filename
+
+Optional arguments:
+  -h, --help            show this help message and exit
+  -c Q_CON, --q_con Q_CON
+                        DMC Model Parameter q_con (default: 0.7)
+  -m Q_MOD, --q_mod Q_MOD
+                        DMC Model Parameter q_mod (default: 0.4)
+  -t TIMELIMIT, --timelimit TIMELIMIT
+                        Time Limit in hours (default: 24)
+  -n NUMCORES, --numcores NUMCORES
+                        Number of cores. 0 uses all available cores (default:
+                        0)
+  -s NUMSOLUTIONS, --numsolutions NUMSOLUTIONS
+                        Number of ILP Solutions (default: 30)
+  -p POOLMODE, --poolmode POOLMODE
+                        Pool mode, possible values 0,1,2 (default: 1). 0:
+                        finds one optimal solution. 1: find multiple solutions
+                        not necessarily the best. 2: find n best multiple
+                        solutions.
+  -f FOCUS, --focus FOCUS
+                        MIP focus, possible values 1,2,3 (default: 1). 1:
+                        finds feasible solutions quickly. 2: to prove
+                        optimality, if good quality solutions can be found
+                        easily. 3: if the best objective bound is moving very
+                        slowly or not at all.
+  -r HEURISTICS, --heuristics HEURISTICS
+                        Fraction of time spent on MIP heuristics, between 0
+                        and 1 (default: 0.5). Larger values produce more and
+                        better feasible solutions, at a cost of slower
+                        progress in the best bound.
+
