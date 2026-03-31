@@ -1,0 +1,15 @@
+Gene       Orthologs  TimeStep   ReverseLPA                ILP1                      ILP2                     
+===============================================================================================================
+JUN        820        1          OASIS                     ATF2                      ATF4                     
+ATF2       546        2          E4BP4                     BATF                      CEBP                     
+ATF6       453        3          ATF3                      ATF4                      BATF                     
+ATF4       432        4          FOS                       JUN                       ATF6                     
+FOS        339        5          ATF6                      CREB                      XBP1                     
+OASIS      285        6          XBP1                      XBP1                      ATF2                     
+CREB       268        7          CREB                      PAR                       JUN                      
+CEBP       259        8          PAR                       CEBP                      ATF3                     
+E4BP4      255        9          JUN                       FOS                       CREB                     
+PAR        244        10         ATF4                      ATF3                      PAR                      
+ATF3       229        11         CEBP                      ATF6                      FOS                      
+BATF       227        12         BATF                      OASIS                     E4BP4                    
+XBP1       203        13         ATF2                      E4BP4                     OASIS                    

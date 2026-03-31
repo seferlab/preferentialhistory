@@ -1,0 +1,11 @@
+Gene       Orthologs  TimeStep   ReverseLPA                ILP1                      ILP2                     
+===============================================================================================================
+ccdc93     508        1          commd9                    ccdc93                    ccdc22                   
+c16orf62   501        2          commd1                    commd5                    commd6                   
+commd2     422        3          commd5                    c16orf62                  commd5                   
+ccdc22     414        4          commd6                    ccdc22                    ccdc93                   
+commd5     384        5          ccdc93                    commd6                    c16orf62                 
+commd3     348        6          commd3                    commd1                    commd1                   
+commd1     290        7          commd2                    commd2                    commd2                   
+commd9     273        8          c16orf62                  commd3                    commd3                   
+commd6     158        9          ccdc22                    commd9                    commd9                   

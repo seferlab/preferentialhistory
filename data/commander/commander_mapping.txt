@@ -1,0 +1,10 @@
+gene    no
+ccdc93  8
+c16orf62    9    
+commd2  2  
+ccdc22  7
+commd5  4
+commd3  3
+commd1  1
+commd9  6
+commd6  5

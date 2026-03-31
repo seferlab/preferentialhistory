@@ -37,10 +37,26 @@ Generates synthetic random networks using preferential attachment model.
 
 ---
 
+# DCH-ILP-PA
+
+Runs the DCH-ILP-PA algortihm for a single known extant graph.
+
+## Required arguments
+- `-r, --root`  
+  Parent directory containing the extant folder.
+
+- `-e, --extant`  
+  Extant filename. The extant file is expected at:
+
+  ```text
+  <root>/<extant>/<extant>
+
+---
+
 ## Analysis Scripts
 
 ### `run_ilp_sim.py`
-Runs ILP solver on multiple networks. Time limit: 2 hours per problem, 10 solutions per network.
+Runs ILP-PA on multiple networks. Time limit: 2 hours per problem, 10 solutions per network.
 
 ### `run_greedy.py`
 Runs greedy algorithm on networks for baseline comparison.
@@ -57,14 +73,14 @@ Runs ILP solver on multiple bZip and commander networks. No time limit, 10 solut
 ### `table_5_7.py` & `table_6_8.py`
 Generate comparison tables for the networks in the research paper.
 
-### `dch_ilp_pa-1.py`
+### `dch_ilp_pa.py`
+DCH-ILP-PA algortihm on extant files.
 Step 1: Community detection using Leiden partitioning.
-
-### `dch_ilp_pa-2.py`
 Step 2: ILP solving on subgraph of networks.
-
-### `dch_ilp_pa-3.py`
 Step 3: Log-likelihood computation and analysis.
+
+### `run_dch_ilp_pa.py`
+Runs DCH-ILP-PA on mutilple networks.
 
 ### `reconstruction_of_ancestries.py`
 Generate reconstruction of ancestries table for the networks in the research paper.
@@ -110,7 +126,6 @@ python run_greedy.py
 python run_data.py
 ```
 
-
 **Analyze results**:
 ```bash
 python analyze_results.py
@@ -123,6 +138,12 @@ python table_6_8.py
 python reconstruction_of_ancestries.py
 ```
 
+**Run DCH-ILP-PA for a single extant**:
+```bash
+python dch_ilp_pa.py -r clusters_for_table_4 -e nx_p=0.5_n=200 -g 1.15
+```
 
-
-
+**Run DCH-ILP-PA on batch**:
+```bash
+python run_dch_ilp_pa.py 
+```

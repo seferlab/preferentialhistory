@@ -13,7 +13,7 @@ ROOT_DIRS = [
 
 SOLUTION_SUFFIX = "_1"
 
-ILP_RE = re.compile(r"ILP_cluster-(\d+)_order0_time_(\d+)\.txt$")
+ILP_RE = re.compile(r"ILP_cluster-(\d+)_order0_time_([0-9]+(?:\.[0-9]+)?)\.txt$")
 MAP_RE = re.compile(r"cluster-(\d+)\.map$")
 ROOT_RE = re.compile(r"cluster-(\d+)\.root$")
 ROOT_ORIG_RE = re.compile(r"cluster-(\d+)\.root_orig$")
@@ -344,7 +344,7 @@ def get_time_values(solution_dir):
     for pth in solution_dir.glob("ILP_cluster-*_order0_time_*.txt"):
         m = ILP_RE.match(pth.name)
         if m:
-            times.add(int(m.group(2)))
+            times.add(float(m.group(2)))
 
     return sorted(times)
 
@@ -352,18 +352,20 @@ def get_time_values(solution_dir):
 def score_cluster_solution_for_time(extant_graph, solution_dir, t):
     cluster_local_to_original, cluster_root_local, invalid_clusters = build_cluster_info(solution_dir)
 
-    total = 0.0
-    seen = 0
-
     cluster_files = []
-    for pth in solution_dir.glob(f"ILP_cluster-*_order0_time_{t}.txt"):
+    for pth in solution_dir.glob("ILP_cluster-*_order0_time_*.txt"):
         m = ILP_RE.match(pth.name)
         if not m:
             continue
         cid = int(m.group(1))
+        t_file = float(m.group(2))
+        if t_file != float(t):
+            continue
         cluster_files.append((cid, pth))
 
     cluster_files.sort(key=lambda x: x[0])
+
+    all_original_pairs = []
 
     for cid, pth in cluster_files:
         if cid in invalid_clusters:
@@ -386,16 +388,15 @@ def score_cluster_solution_for_time(extant_graph, solution_dir, t):
         if not original_pairs:
             continue
 
-        networks = get_all_networks(extant_graph, original_pairs)
-        sc = compute_total_loglkl(networks, original_pairs, P)
+        all_original_pairs.extend(original_pairs)
 
-        total += sc
-        seen += 1
-
-    if seen == 0:
+    if not all_original_pairs:
         return None
 
-    return total
+    networks = get_all_networks(extant_graph, all_original_pairs)
+    total_score = compute_total_loglkl(networks, all_original_pairs, P)
+
+    return total_score
 
 
 def score_greedy_solution(extant_graph, greedy_file):

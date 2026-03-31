@@ -61,6 +61,8 @@ def select_roots(subgraphs, G_full):
     return roots
 
 if __name__ == "__main__":
+    # files = [f"nx_p=0.5_n={n}" for n in [50, 100, 250, 500, 1000]]
+    # files = [f"nx_p=0.5_n={n}" for n in [12, 20, 50, 100]]
     files = [f"nx_p=0.5_n={n}" for n in [200]]
     # folder = "clusters_for_table_2"
     # folder = "clusters_for_table_3"

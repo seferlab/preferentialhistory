@@ -1,0 +1,10 @@
+gene    Orthologs
+ccdc93  508
+c16orf62    501
+commd2  422
+ccdc22  414
+commd5  384
+commd3  348
+commd1  290
+commd9  273
+commd6  158
